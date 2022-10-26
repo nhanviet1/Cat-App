@@ -1,0 +1,2 @@
+[90mE:\Cat App\app\src\main\java\com\example\catapp\[0mMainActivity.kt[90m:[0m1[90m:1:[0m File must end with a newline (\n)
+[90mE:\Cat App\app\src\main\java\com\example\catapp\[0mMainActivity.kt[90m:[0m3[90m:1:[0m Imports must be ordered in lexicographic order without any empty lines in-between with "java", "javax", "kotlin" and aliases in the end
