@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Cat App</string>
+    <string name="feed_me_api">Feed Me API</string>
+    <string name="enter_your_api">Enter your API</string>
+    <string name="get_your_api_here">Get your API here</string>
+    <string name="text_login">Login</string>
 </resources>
