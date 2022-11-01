@@ -2,8 +2,10 @@ package com.example.catapp.data.source.remote.fetchjson
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import com.sun.mvp.data.repository.source.remote.OnResultListener
 import org.json.JSONArray
+import org.json.JSONException
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -11,7 +13,7 @@ import java.net.URL
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-class GetJsonFromUrl<T> constructor(
+class GetJson<T>(
     private val urlString: String,
     private val keyEntity: String,
     private val userAPI: String,
@@ -20,7 +22,6 @@ class GetJsonFromUrl<T> constructor(
 
     private val mExecutor: Executor = Executors.newSingleThreadExecutor()
     private val mHandler = Handler(Looper.getMainLooper())
-    private var exception: Exception? = null
     private var data: T? = null
 
     init {
@@ -34,8 +35,8 @@ class GetJsonFromUrl<T> constructor(
             mHandler.post {
                 try {
                     data?.let { listener.onSuccess(it) }
-                } catch (e: Exception) {
-                    listener.onError(exception)
+                } catch (e: JSONException) {
+                    listener.onError(e)
                 }
             }
         }
@@ -61,13 +62,14 @@ class GetJsonFromUrl<T> constructor(
         }
         bufferedReader.close()
         httpURLConnection?.disconnect()
+        Log.d("Lmeow", "Data: $stringBuilder")
+        Log.d("Lmeow", "URL: $url")
         return stringBuilder.toString()
     }
 
     companion object {
         private const val TIME_OUT = 15000
         private const val METHOD_GET = "GET"
-        private const val METHOD_POST = "POST"
         private const val X_API_KEY = "x-api-key"
     }
 }

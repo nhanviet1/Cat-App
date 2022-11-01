@@ -1,6 +1,7 @@
 package com.example.catapp.data.source.remote.fetchjson
 
-import com.example.catapp.data.model.responsemodel.CatEntry
+import com.example.catapp.utils.BREEDS
+import com.example.catapp.utils.CATEGORIES_TAG
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -17,22 +18,25 @@ class ParseDataWithJson {
                 }
             }
         } catch (e: JSONException) {
-            e.printStackTrace()
+            return e
         }
         return data
     }
 
     private fun parseJsonToObject(jsonObject: JSONObject?, keyEntity: String): Any? {
+        var result: Any? = null
         try {
             if (jsonObject != null)  {
                 return when(keyEntity) {
-                    "" -> ParseJson().catParseJson(jsonObject)
+                    "" -> ParseCatJson().catParseJson(jsonObject)
+                    BREEDS -> ParseBreedsJson().breedParse(jsonObject)
+                    CATEGORIES_TAG -> ParseCategoryJson().categoryParse(jsonObject)
                     else -> null
                 }
             }
         } catch (e: JSONException) {
-            e.printStackTrace()
+            result = e
         }
-        return null
+        return result
     }
 }

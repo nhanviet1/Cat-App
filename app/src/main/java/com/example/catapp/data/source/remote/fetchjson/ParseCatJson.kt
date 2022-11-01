@@ -8,53 +8,55 @@ import com.example.catapp.data.model.responsemodel.categories.CategoriesItem
 import org.json.JSONException
 import org.json.JSONObject
 
-class ParseJson {
+class ParseCatJson {
 
     fun catParseJson(jsonObject: JSONObject) = Cat().apply {
         jsonObject.let {
-            id = it.getString(CatEntry.ID)
-            url = it.getString(CatEntry.URL)
-            width = it.getInt(CatEntry.WIDTH)
-            height = it.getInt(CatEntry.HEIGHT)
+            id = it.optString(CatEntry.ID)
+            url = it.optString(CatEntry.URL)
+            width = it.optInt(CatEntry.WIDTH)
+            height = it.optInt(CatEntry.HEIGHT)
 
             categories = try {
                 val categoryInfo = it.getJSONArray(CatEntry.CATEGORIES).getJSONObject(1)
-                val categoryName = categoryInfo.getString(CatEntry.NAME)
-                val categoryID = categoryInfo.getInt(CatEntry.ID)
+                val categoryName = categoryInfo.optString(CatEntry.NAME)
+                val categoryID = categoryInfo.optInt(CatEntry.ID)
                 CategoriesItem(categoryID, categoryName)
 
             } catch (e: JSONException) {
+                println(e)
                 null
             }
         }
 
         breed = try {
-            catBreadParse(jsonObject)
+            catBreedParse(jsonObject)
         } catch (e: JSONException) {
+            println(e)
             null
         }
     }
 
-    private fun catBreadParse(jsonObject: JSONObject): Breed? {
+    private fun catBreedParse(jsonObject: JSONObject): Breed? {
         var breed: Breed? = null
         val breedBox = jsonObject.getJSONArray(CatEntry.BREEDS)
         if (breedBox.length() > 0) {
             val breedInfo = jsonObject.getJSONArray(CatEntry.BREEDS).getJSONObject(0)
 
-            val breedName = breedInfo.getString(CatEntry.NAME)
-            val origin = breedInfo.getString(CatEntry.ORIGIN)
-            val breedID = breedInfo.getString(CatEntry.ID)
-            val adaptability = breedInfo.getInt(CatEntry.ADAPT)
-            val childFriendly = breedInfo.getInt(CatEntry.CHILD_FRIENDLY)
-            val dogFriendly = breedInfo.getInt(CatEntry.DOG_FRIENDLY)
-            val wikiURL = breedInfo.getString(CatEntry.WIKI)
-            val lifeSpan = breedInfo.getString(CatEntry.LIFE_SPAN)
-            val intel = breedInfo.getInt(CatEntry.INTEL)
-            val description = breedInfo.getString(CatEntry.DES)
-            val health = breedInfo.getInt(CatEntry.HEALTH)
+            val breedName = breedInfo.optString(CatEntry.NAME)
+            val origin = breedInfo.optString(CatEntry.ORIGIN)
+            val breedID = breedInfo.optString(CatEntry.ID)
+            val adaptability = breedInfo.optInt(CatEntry.ADAPT)
+            val childFriendly = breedInfo.optInt(CatEntry.CHILD_FRIENDLY)
+            val dogFriendly = breedInfo.optInt(CatEntry.DOG_FRIENDLY)
+            val wikiURL = breedInfo.optString(CatEntry.WIKI)
+            val lifeSpan = breedInfo.optString(CatEntry.LIFE_SPAN)
+            val intel = breedInfo.optInt(CatEntry.INTEL)
+            val description = breedInfo.optString(CatEntry.DES)
+            val health = breedInfo.optInt(CatEntry.HEALTH)
 
             val weight = breedInfo.getJSONObject(CatEntry.WEIGHT)
-            val metric = weight.getString(CatEntry.METRIC)
+            val metric = weight.optString(CatEntry.METRIC)
 
             breed = Breed(
                 adaptability,
