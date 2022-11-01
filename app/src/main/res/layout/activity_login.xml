@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/login_background_color"
-    tools:context=".view.LoginActivity">
+    tools:context=".view.loginscreen.LoginActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/img_Logo"
@@ -39,21 +39,22 @@
         android:id="@+id/editText_requestAPI"
         android:layout_width="@dimen/dp_240"
         android:layout_height="wrap_content"
+        android:text="@string/text_API"
         android:hint="@string/enter_your_api"
         android:textSize="@dimen/sp_14"
         android:maxLines="1"
         android:inputType="text"
-        android:backgroundTint="@color/purple"
+        android:backgroundTint="@color/color_pink"
         app:layout_constraintLeft_toLeftOf="@id/img_Logo"
         app:layout_constraintRight_toRightOf="@id/img_Logo"
         app:layout_constraintTop_toBottomOf="@id/text_requestAPI" />
 
     <Button
-        android:id="@+id/button_login"
+        android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_login"
-        android:backgroundTint="@color/purple"
+        android:backgroundTint="@color/color_pink"
         app:layout_constraintLeft_toLeftOf="@id/editText_requestAPI"
         app:layout_constraintRight_toRightOf="@id/editText_requestAPI"
         app:layout_constraintTop_toBottomOf="@id/editText_requestAPI" />
@@ -66,9 +67,9 @@
         android:text="@string/get_your_api_here"
         android:layout_marginTop="@dimen/dp_14"
         android:textSize="@dimen/sp_16"
-        android:textColor="@color/purple"
-        app:layout_constraintLeft_toLeftOf="@id/button_login"
-        app:layout_constraintRight_toRightOf="@id/button_login"
-        app:layout_constraintTop_toBottomOf="@id/button_login" />
+        android:textColor="@color/color_pink"
+        app:layout_constraintLeft_toLeftOf="@id/btn_login"
+        app:layout_constraintRight_toRightOf="@id/btn_login"
+        app:layout_constraintTop_toBottomOf="@id/btn_login" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,12 +1,10 @@
-package com.example.catapp.view.presenter
+package com.example.catapp.view.loginscreen
 
-import android.content.Context
 import com.example.catapp.data.model.responsemodel.Cat
 import java.lang.Exception
 
-interface CatInterface {
+interface LoginInterface {
     interface Presenter {
-        fun getLocalCat()
         fun getRemoteCat(userAPI: String)
     }
 

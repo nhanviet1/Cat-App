@@ -1,7 +1,7 @@
 package com.sun.mvp.data.repository.source.local
 
 import com.example.catapp.data.model.responsemodel.Cat
-import com.example.catapp.data.source.CatDataSource
+import com.example.catapp.data.source.datasource.CatDataSource
 import com.sun.mvp.data.repository.source.remote.OnResultListener
 
 class CatLocalDataSource: CatDataSource.Local {
