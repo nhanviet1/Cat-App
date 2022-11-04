@@ -6,8 +6,10 @@ import com.example.catapp.data.model.responsemodel.Cat
 import com.example.catapp.utils.base.BaseActivity
 import com.example.catapp.databinding.ActivityLoginBinding
 import com.example.catapp.utils.PresenterProvider
-import com.example.catapp.utils.USER_API
 import com.example.catapp.utils.shortToast
+import com.example.catapp.utils.WEB_URL
+import com.example.catapp.utils.CAT_URL
+import com.example.catapp.utils.USER_API
 import com.example.catapp.view.WebViewActivity
 import com.example.catapp.view.homescreen.HomeActivity
 import java.lang.Exception
@@ -25,7 +27,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
 
     private fun setup() {
         loginPresenter = PresenterProvider.loginPresenter(this@LoginActivity)
-
     }
 
     override fun onGetCatSuccess(cat: MutableList<Cat>) {
@@ -51,6 +52,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
 
         binding.textOpenWebView.setOnClickListener {
             val intent = Intent(this@LoginActivity, WebViewActivity::class.java)
+            intent.putExtra(WEB_URL, CAT_URL)
             startActivity(intent)
         }
     }

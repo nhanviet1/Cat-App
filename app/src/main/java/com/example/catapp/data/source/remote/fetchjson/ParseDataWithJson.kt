@@ -1,6 +1,7 @@
 package com.example.catapp.data.source.remote.fetchjson
 
 import com.example.catapp.utils.BREEDS
+import com.example.catapp.utils.BREEDS_SEARCH
 import com.example.catapp.utils.CATEGORIES_TAG
 import org.json.JSONArray
 import org.json.JSONException
@@ -23,7 +24,7 @@ class ParseDataWithJson {
         return data
     }
 
-    private fun parseJsonToObject(jsonObject: JSONObject?, keyEntity: String): Any? {
+    fun parseJsonToObject(jsonObject: JSONObject?, keyEntity: String): Any? {
         var result: Any? = null
         try {
             if (jsonObject != null)  {
@@ -31,6 +32,7 @@ class ParseDataWithJson {
                     "" -> ParseCatJson().catParseJson(jsonObject)
                     BREEDS -> ParseBreedsJson().breedParse(jsonObject)
                     CATEGORIES_TAG -> ParseCategoryJson().categoryParse(jsonObject)
+                    BREEDS_SEARCH -> ParseBreedsSearchJson().breedParse(jsonObject)
                     else -> null
                 }
             }
