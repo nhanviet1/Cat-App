@@ -6,7 +6,7 @@ import com.example.catapp.data.model.responsemodel.breeds.Image
 import com.example.catapp.data.model.responsemodel.cat.Weight
 import org.json.JSONObject
 
-class ParseBreedsJson {
+class ParseBreedsSearchJson {
 
     fun breedParse(jsonObject: JSONObject): BreedItem {
         val breedName = jsonObject.optString(CatEntry.NAME)
@@ -24,9 +24,7 @@ class ParseBreedsJson {
         val health = jsonObject.optInt(CatEntry.HEALTH)
         val metric = jsonObject.getJSONObject(CatEntry.WEIGHT).optString(CatEntry.METRIC)
 
-        val imageUrl = jsonObject.getJSONObject(CatEntry.IMAGE).optString(CatEntry.URL)
-        val imageID = jsonObject.getJSONObject(CatEntry.IMAGE).optString(CatEntry.ID)
-        val image = Image(imageID, imageUrl)
+        val image = Image("", "")
 
         return BreedItem(
             adaptability,
