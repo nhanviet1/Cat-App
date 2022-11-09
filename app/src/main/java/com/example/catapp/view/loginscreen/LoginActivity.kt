@@ -2,6 +2,7 @@ package com.example.catapp.view.loginscreen
 
 import android.content.Intent
 import android.os.Bundle
+import com.example.catapp.R
 import com.example.catapp.data.model.responsemodel.Cat
 import com.example.catapp.utils.base.BaseActivity
 import com.example.catapp.databinding.ActivityLoginBinding
@@ -33,8 +34,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
         val userAPI = binding.editTextRequestAPI.text.toString()
         val checker = cat[0].breed
         if (checker == null) {
-            startHomeScreen(userAPI)
-            shortToast("Your API is invalid!")
+            shortToast(getString(R.string.text_invalid_API))
         } else {
             startHomeScreen(userAPI)
         }
@@ -46,7 +46,7 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(ActivityLoginBinding::i
             if (userAPI != "") {
                 loginPresenter?.getRemoteCat(userAPI)
             } else {
-                shortToast("Please enter your API")
+                shortToast(getString(R.string.text_enter_API))
             }
         }
 

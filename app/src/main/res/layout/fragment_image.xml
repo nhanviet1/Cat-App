@@ -106,7 +106,7 @@
             <View
                 android:id="@+id/view_divider"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/dp_1"
                 android:layout_marginVertical="@dimen/dp_14"
                 android:background="@color/color_pink_tabLayout"
                 app:layout_constraintBottom_toTopOf="@id/image_page_holder"
