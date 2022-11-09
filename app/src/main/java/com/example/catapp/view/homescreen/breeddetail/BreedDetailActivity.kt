@@ -11,7 +11,7 @@ import com.example.catapp.utils.BREED_IMG_URL
 import com.example.catapp.utils.WEB_URL
 import com.example.catapp.utils.NONE
 import com.example.catapp.utils.shortToast
-import com.example.catapp.utils.loadBigImage
+import com.example.catapp.utils.loadCoverImage
 import com.example.catapp.utils.base.BaseActivity
 import com.example.catapp.view.WebViewActivity
 import com.example.catapp.view.adapter.RatingAdapter
@@ -42,7 +42,7 @@ class BreedDetailActivity :
     override fun onGetBreedSuccess(breed: BreedItem) {
         val url = intent.getStringExtra(BREED_IMG_URL)
         if (url != null) {
-            this.loadBigImage(url, binding.imgBreed)
+            this.loadCoverImage(url, binding.imgBreed)
         }
         binding.apply {
             textBreedName.text = breed.name

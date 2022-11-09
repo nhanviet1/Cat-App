@@ -1,22 +1,20 @@
-package com.example.catapp.data.source.remote.fetchjson
+package com.example.catapp.data.source.remote.fetchjson.delete
 
 import android.os.Handler
 import android.os.Looper
-import com.example.catapp.BuildConfig
-import com.example.catapp.utils.BREEDS_SEARCH
-import com.example.catapp.utils.X_API_KEY
+import com.example.catapp.data.source.remote.fetchjson.ParseDataWithJson
 import com.sun.mvp.data.repository.source.remote.OnResultListener
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
+import com.example.catapp.utils.X_API_KEY
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-class GetJson<T>(
+class DeleteJson<T>(
     private val urlString: String,
     private val keyEntity: String,
     private val userAPI: String,
@@ -28,29 +26,12 @@ class GetJson<T>(
     private var data: T? = null
 
     init {
-        when (keyEntity){
-            BREEDS_SEARCH -> callAPISearch()
-            else ->  callAPI()
-        }
+        deleteAPI()
     }
 
-    private fun callAPI() {
+    private fun deleteAPI() {
         mExecutor.execute {
-            val responseJson = getJsonFromUrl(urlString)
-            data = ParseDataWithJson().parseJsonToData(JSONArray(responseJson), keyEntity) as? T
-            mHandler.post {
-                try {
-                    data?.let { listener.onSuccess(it) }
-                } catch (e: JSONException) {
-                    listener.onError(e)
-                }
-            }
-        }
-    }
-
-    private fun callAPISearch(){
-        mExecutor.execute {
-            val responseJson = getJsonFromUrl(urlString)
+            val responseJson = deleteJsonFromUrl(urlString)
             data = ParseDataWithJson().parseJsonToObject(JSONObject(responseJson), keyEntity) as? T
             mHandler.post {
                 try {
@@ -62,16 +43,15 @@ class GetJson<T>(
         }
     }
 
-    private fun getJsonFromUrl(urlString: String): String {
+    private fun deleteJsonFromUrl(urlString: String): String {
         val url = URL(urlString)
         val httpURLConnection = url.openConnection() as? HttpURLConnection
         httpURLConnection?.run {
             useCaches = false
             setRequestProperty(X_API_KEY, userAPI)
-            setRequestProperty(CONTENT_TYPE_HEAD, BuildConfig.CONTENT_TYPE)
             connectTimeout = TIME_OUT
             readTimeout = TIME_OUT
-            requestMethod = METHOD_GET
+            requestMethod = METHOD_DELETE
             doInput = true
             connect()
         }
@@ -88,7 +68,6 @@ class GetJson<T>(
 
     companion object {
         private const val TIME_OUT = 15000
-        private const val METHOD_GET = "GET"
-        private const val CONTENT_TYPE_HEAD = "Content-Type"
+        private const val METHOD_DELETE = "DELETE"
     }
 }

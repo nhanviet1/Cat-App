@@ -1,5 +1,6 @@
 package com.example.catapp.view.homescreen.homefragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,27 +12,33 @@ import com.example.catapp.data.model.responsemodel.Cat
 import com.example.catapp.data.model.responsemodel.breeds.BreedItem
 import com.example.catapp.data.model.responsemodel.categories.CategoriesItem
 import com.example.catapp.databinding.FragmentImageBinding
+import com.example.catapp.utils.SCREEN_ADDRESS
 import com.example.catapp.utils.ORDER_RANDOM
 import com.example.catapp.utils.ORDER_NEWEST
 import com.example.catapp.utils.ORDER_OLDEST
 import com.example.catapp.utils.NONE
-import com.example.catapp.utils.PAGE_ONE
-import com.example.catapp.utils.CAT_IMAGE_MAX_SIZE
-import com.example.catapp.utils.shortToast
-import com.example.catapp.utils.PresenterProvider
 import com.example.catapp.utils.disable
 import com.example.catapp.utils.enable
+import com.example.catapp.utils.PAGE_ONE
+import com.example.catapp.utils.CAT_IMAGE_MAX_SIZE
+import com.example.catapp.utils.IMAGE_URL
+import com.example.catapp.utils.USER_API
+import com.example.catapp.utils.IMAGE_ID
+import com.example.catapp.utils.IMAGE_SCREEN_TAG
+import com.example.catapp.utils.shortToast
+import com.example.catapp.utils.spinnerSelectedListener
+import com.example.catapp.utils.PresenterProvider
 import com.example.catapp.view.adapter.CatImageAdapter
 import com.example.catapp.view.homescreen.HomeActivity
 import com.example.catapp.view.homescreen.imagescreenpresenter.CatInterface
-import com.example.catapp.utils.spinnerSelectedListener
+import com.example.catapp.view.homescreen.BigImageActivity
 import java.lang.Exception
 
 class ImageFragment : Fragment(), CatInterface.View {
 
     private val binding by lazy { FragmentImageBinding.inflate(layoutInflater) }
     private var userApi: String? = null
-    private val catAdapter by lazy { CatImageAdapter() }
+    private val catAdapter by lazy { CatImageAdapter(::onClickItem) }
     private val breedNameList = mutableListOf<String>()
     private val orderList = mutableListOf(ORDER_RANDOM, ORDER_NEWEST, ORDER_OLDEST)
     private val breedList = mutableListOf<BreedItem>()
@@ -58,7 +65,6 @@ class ImageFragment : Fragment(), CatInterface.View {
         super.onViewCreated(view, savedInstanceState)
         userApi = HomeActivity.userApi
         setup()
-        bindingButton()
         if (userApi != null) {
             catPresenter?.getRemoteCat(userApi!!, searchFilter)
         }
@@ -76,7 +82,9 @@ class ImageFragment : Fragment(), CatInterface.View {
                 val random = adapterView?.getItemAtPosition(0).toString()
                 isRandom = selection == random
                 val orderID = orderList[position]
-                searchFilter = searchFilter.copy(order = orderID)
+                currentPage = 0
+                binding.textPageNumber.text = (currentPage + 1).toString()
+                searchFilter = searchFilter.copy(order = orderID, pageNumber = currentPage)
                 callData()
             }
 
@@ -106,6 +114,19 @@ class ImageFragment : Fragment(), CatInterface.View {
                 binding.btnNext.disable(it)
             }
             searchFilter = searchFilter.copy(category = categoryID)
+        }
+
+        binding.btnRandom.setOnClickListener {
+            binding.textPageNumber.text = PAGE_ONE.toString()
+            currentPage = 0
+            searchFilter = searchFilter.copy(pageNumber = currentPage)
+            callData()
+        }
+        binding.btnNext.setOnClickListener {
+            loadNewImage(true)
+        }
+        binding.btnPrevious.setOnClickListener {
+            loadNewImage(false)
         }
     }
 
@@ -148,21 +169,6 @@ class ImageFragment : Fragment(), CatInterface.View {
         }
     }
 
-    private fun bindingButton() {
-        binding.btnRandom.setOnClickListener {
-            binding.textPageNumber.text = PAGE_ONE.toString()
-            currentPage = 0
-            searchFilter = searchFilter.copy(pageNumber = currentPage)
-            callData()
-        }
-        binding.btnNext.setOnClickListener {
-            loadNewImage(true)
-        }
-        binding.btnPrevious.setOnClickListener {
-            loadNewImage(false)
-        }
-    }
-
     private fun callData() {
         if (userApi != null) {
             binding.apply {
@@ -201,6 +207,15 @@ class ImageFragment : Fragment(), CatInterface.View {
         } else {
             binding.btnPrevious.enable()
         }
+    }
+
+    private fun onClickItem(data: Cat) {
+        val intent = Intent(context, BigImageActivity::class.java)
+        intent.putExtra(IMAGE_URL, data.url)
+        intent.putExtra(USER_API, userApi)
+        intent.putExtra(IMAGE_ID, data.id)
+        intent.putExtra(SCREEN_ADDRESS, IMAGE_SCREEN_TAG)
+        startActivity(intent)
     }
 
     override fun onError(exception: Exception?) {

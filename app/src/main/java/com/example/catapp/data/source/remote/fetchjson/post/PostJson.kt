@@ -1,25 +1,26 @@
-package com.example.catapp.data.source.remote.fetchjson
+package com.example.catapp.data.source.remote.fetchjson.post
 
 import android.os.Handler
 import android.os.Looper
 import com.example.catapp.BuildConfig
-import com.example.catapp.utils.BREEDS_SEARCH
-import com.example.catapp.utils.X_API_KEY
+import com.example.catapp.data.source.remote.fetchjson.ParseDataWithJson
 import com.sun.mvp.data.repository.source.remote.OnResultListener
-import org.json.JSONArray
 import org.json.JSONException
+import com.example.catapp.utils.X_API_KEY
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
-class GetJson<T>(
+class PostJson<T>(
     private val urlString: String,
     private val keyEntity: String,
     private val userAPI: String,
+    private val imgID: String,
     private val listener: OnResultListener<T>
 ) {
 
@@ -28,29 +29,12 @@ class GetJson<T>(
     private var data: T? = null
 
     init {
-        when (keyEntity){
-            BREEDS_SEARCH -> callAPISearch()
-            else ->  callAPI()
-        }
+        postAPI()
     }
 
-    private fun callAPI() {
+    private fun postAPI() {
         mExecutor.execute {
-            val responseJson = getJsonFromUrl(urlString)
-            data = ParseDataWithJson().parseJsonToData(JSONArray(responseJson), keyEntity) as? T
-            mHandler.post {
-                try {
-                    data?.let { listener.onSuccess(it) }
-                } catch (e: JSONException) {
-                    listener.onError(e)
-                }
-            }
-        }
-    }
-
-    private fun callAPISearch(){
-        mExecutor.execute {
-            val responseJson = getJsonFromUrl(urlString)
+            val responseJson = postJsonFromUrl(urlString)
             data = ParseDataWithJson().parseJsonToObject(JSONObject(responseJson), keyEntity) as? T
             mHandler.post {
                 try {
@@ -62,19 +46,28 @@ class GetJson<T>(
         }
     }
 
-    private fun getJsonFromUrl(urlString: String): String {
+    private fun postJsonFromUrl(urlString: String): String {
         val url = URL(urlString)
         val httpURLConnection = url.openConnection() as? HttpURLConnection
         httpURLConnection?.run {
             useCaches = false
+            requestMethod = METHOD_POST
             setRequestProperty(X_API_KEY, userAPI)
             setRequestProperty(CONTENT_TYPE_HEAD, BuildConfig.CONTENT_TYPE)
+            doOutput = true
+            doInput= true
+            connect()
+            val os = OutputStreamWriter(outputStream)
+            val body = ConvertFavouriteJson().convertToJson(imgID)
+            os.run {
+                write(body)
+                flush()
+                close()
+            }
             connectTimeout = TIME_OUT
             readTimeout = TIME_OUT
-            requestMethod = METHOD_GET
-            doInput = true
-            connect()
         }
+
         val bufferedReader = BufferedReader(InputStreamReader(httpURLConnection?.inputStream))
         val stringBuilder = StringBuilder()
         var line: String?
@@ -88,7 +81,7 @@ class GetJson<T>(
 
     companion object {
         private const val TIME_OUT = 15000
-        private const val METHOD_GET = "GET"
+        private const val METHOD_POST = "POST"
         private const val CONTENT_TYPE_HEAD = "Content-Type"
     }
 }

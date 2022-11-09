@@ -3,17 +3,18 @@ package com.example.catapp.view.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.catapp.data.model.responsemodel.Cat
+import com.example.catapp.data.model.responsemodel.favourite.FavouriteItem
 import com.example.catapp.databinding.ItemImageLayoutBinding
 import com.example.catapp.utils.loadImage
 
-class CatImageAdapter(private val onClickItem: (Cat) -> Unit) : RecyclerView.Adapter<CatImageAdapter.ViewHolder>() {
+class FavImageAdapter(private val onClickItem: (FavouriteItem) -> Unit) :
+    RecyclerView.Adapter<FavImageAdapter.ViewHolder>() {
 
-    private val catList = mutableListOf<Cat>()
+    private val favList = mutableListOf<FavouriteItem>()
 
-    fun setData(data: List<Cat>) {
-        catList.clear()
-        catList.addAll(data)
+    fun setData(data: List<FavouriteItem>) {
+        favList.clear()
+        favList.addAll(data)
         notifyDataSetChanged()
     }
 
@@ -24,18 +25,18 @@ class CatImageAdapter(private val onClickItem: (Cat) -> Unit) : RecyclerView.Ada
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bindData(catList[holder.adapterPosition])
+        holder.bindData(favList[holder.adapterPosition])
     }
 
     override fun getItemCount(): Int {
-        return catList.size
+        return favList.size
     }
 
     inner class ViewHolder(private val binding: ItemImageLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bindData(data: Cat) {
+        fun bindData(data: FavouriteItem) {
             val context = binding.root.context
-            context.loadImage(data.url, binding.imageCat, false)
+            context.loadImage(data.image.url, binding.imageCat, false)
             binding.root.setOnClickListener { onClickItem(data) }
         }
     }
